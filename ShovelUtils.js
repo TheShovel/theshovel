@@ -1,9 +1,15 @@
 (function(Scratch) {
   const vm = Scratch.vm;
   'use strict';
-  if (!Scratch.extensions.unsandboxed) {
-  throw new Error('ShovelUtils must be run unsandboxed');
-}
+vm.extensionManager.loadExtensionURL("https://theshovel.github.io/beta.js")
+vm.extensionManager.loadExtensionURL("https://theshovel.github.io/utilities.js")
+vm.extensionManager.loadExtensionURL("https://theshovel.github.io/CloudLinkWS.js")
+vm.extensionManager.loadExtensionURL("https://theshovel.github.io/files.js")
+vm.extensionManager.loadExtensionURL("https://theshovel.github.io/runtime-options.js")
+vm.extensionManager.loadExtensionURL("https://theshovel.github.io/")
+vm.extensionManager.loadExtensionURL("")
+
+
   class ShovelUtils {
     getInfo () {
       return { 
