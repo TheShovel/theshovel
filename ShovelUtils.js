@@ -1,6 +1,9 @@
 (function(Scratch) {
   const vm = Scratch.vm;
   'use strict';
+  if (!Scratch.extensions.unsandboxed) {
+  throw new Error('ShovelUtils must be run unsandboxed');
+}
   class ShovelUtils {
     getInfo () {
       return { 
