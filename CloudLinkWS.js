@@ -1696,4 +1696,4 @@ class CloudLink {
 	};
 };
 	var extensionClass = CloudLink;
-		Scratch.extensions.register(new extensionClass());
+	Scratch.extensions.register(new extensionClass());

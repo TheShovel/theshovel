@@ -1,10 +1,6 @@
 (function(Scratch) {
   'use strict';
 
-  if (!Scratch.extensions.unsandboxed) {
-    throw new Error('files extension must be run unsandboxed');
-  }
-
   const MODE_MODAL = 'modal';
   const MODE_IMMEDIATELY_SHOW_SELECTOR = 'selector';
   const MODE_ONLY_SELECTOR = 'only-selector';
