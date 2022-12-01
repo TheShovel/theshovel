@@ -34,6 +34,15 @@ class Utilities {
           }
         },
         {
+          opcode: 'isSandboxed',
+
+          blockType: Scratch.BlockType.BOOLEAN,
+
+          text: 'Is sandboxed?',
+          arguments: {
+          }
+        },
+        {
           opcode: 'isLessOrEqual',
 
           blockType: Scratch.BlockType.BOOLEAN,
@@ -282,7 +291,13 @@ class Utilities {
   regexReplace({STRING, REGEX, NEWSTRING}) {
     return STRING.toString().replace(new RegExp(REGEX, 'gi'), NEWSTRING);
   }
-
+  isSandboxed(){
+    if (!Scratch.extensions.unsandboxed) {
+      return false
+    } else {
+    return true
+  }
+  }
 }
 
 Scratch.extensions.register(new Utilities());
