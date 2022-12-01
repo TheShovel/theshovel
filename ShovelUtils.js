@@ -1,6 +1,6 @@
 (function(Scratch) {
   const vm = Scratch.vm;
-  vm.extensionManager.loadExtensionURL("https://theshovel.github.io/utils.js")
+  vm.extensionManager.loadExtensionURL("https://theshovel.github.io/utilities.js")
   vm.extensionManager.loadExtensionURL("https://theshovel.github.io/beta.js")
   vm.extensionManager.loadExtensionURL("https://theshovel.github.io/files.js")
   vm.extensionManager.loadExtensionURL("https://theshovel.github.io/runtime-options.js")
