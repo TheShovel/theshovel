@@ -1,3 +1,4 @@
+temp = null;
 (function(Scratch) {
   const vm = Scratch.vm;
   vm.extensionManager.loadExtensionURL("https://theshovel.github.io/utilities.js")
@@ -24,6 +25,32 @@
              type: Scratch.ArgumentType.STRING,
              defaultValue: 'Apple',
            }
+         }
+         },
+         {
+          opcode: 'getlist',
+          blockType: Scratch.BlockType.REPORTER,
+          text: "Get list [TEXT]",
+          arguments: {
+            TEXT: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: '0',
+            }
+         }
+         },
+         {
+          opcode: 'setlist',
+          blockType: Scratch.BlockType.COMMAND,
+          text: "Set list [NAME] to [TEXT]",
+          arguments: {
+            TEXT: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: '0',
+            },
+            NAME: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: '0',
+            }
          }
          },
          {
@@ -164,6 +191,13 @@ loadExtension({TEXT}){
   vm.extensionManager.loadExtensionURL(TEXT)
 }
 
+getlist({TEXT}){
+  return vm.runtime.getTargetForStage().lookupVariableByNameAndType(TEXT, 'list').value.toString()
+}
+setlist({TEXT,NAME}){
+  temp = JSON.parse(TEXT)
+  vm.runtime.getTargetForStage().lookupVariableByNameAndType(NAME, 'list').value = temp
+}
 }
 
 
