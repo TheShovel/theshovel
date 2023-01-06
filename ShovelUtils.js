@@ -1,11 +1,13 @@
 temp = null;
 (function(Scratch) {
   const vm = Scratch.vm;
-  vm.extensionManager.loadExtensionURL("https://theshovel.github.io/utilities.js")
-  vm.extensionManager.loadExtensionURL("https://theshovel.github.io/beta.js")
-  vm.extensionManager.loadExtensionURL("https://theshovel.github.io/files.js")
-  vm.extensionManager.loadExtensionURL("https://theshovel.github.io/runtime-options.js")
-  vm.extensionManager.loadExtensionURL("https://theshovel.github.io/CloudLinkWS.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/utilities.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/beta.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/files.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/runtime-options.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/CloudLinkWS.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/pointerlock.js")
+
   'use strict';
   class ShovelUtils {
     getInfo () {
