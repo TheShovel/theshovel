@@ -1,13 +1,16 @@
 (function(Scratch) {
   'use strict';
 
+  if (!Scratch.extensions.unsandboxed) {
+    throw new Error('files extension must be run unsandboxed');
+  }
+
   const MODE_MODAL = 'modal';
   const MODE_IMMEDIATELY_SHOW_SELECTOR = 'selector';
   const MODE_ONLY_SELECTOR = 'only-selector';
   const ALL_MODES = [MODE_MODAL, MODE_IMMEDIATELY_SHOW_SELECTOR, MODE_ONLY_SELECTOR];
-
   let openFileSelectorMode = MODE_MODAL;
-
+  var dataurloutput = null;
   const showFilePrompt = (accept) => new Promise((_resolve) => {
     // We can't reliably show an <input> picker without "user interaction" in all environments,
     // so we have to show our own UI anyways. We may as well use this to implement some nice features
@@ -35,13 +38,18 @@
 
       const reader = new FileReader();
       reader.onload = () => {
-        callback(reader.result);
+        callback(/** @type {string} */ (reader.result));
       };
       reader.onerror = () => {
         console.error('Failed to read file as text', reader.error);
         callback('');
       };
+      if (dataurloutput) {
+        reader.readAsDataURL(file);
+      } else {
       reader.readAsText(file);
+      }
+      //console.log(dataurloutput)
     };
 
     /** @param {KeyboardEvent} e */
@@ -116,6 +124,7 @@
     input.type = 'file';
     input.accept = accept;
     input.addEventListener('change', (e) => {
+      // @ts-expect-error
       const file = e.target.files[0];
       if (file) {
         readFile(file);
@@ -129,7 +138,8 @@
     modal.appendChild(title);
 
     const subtitle = document.createElement('div');
-    subtitle.textContent = `Accepted formats: ${accept}`;
+    const formattedAccept = accept || 'any';
+    subtitle.textContent = `Accepted formats: ${formattedAccept}`;
     modal.appendChild(subtitle);
 
     document.body.appendChild(outer);
@@ -146,6 +156,7 @@
       outer.remove();
     }
   });
+
 
   const download = (text, file) => {
     const blob = new Blob([text]);
@@ -211,6 +222,17 @@
                 menu: 'automaticallyOpen'
               }
             }
+          },
+          {
+            opcode: 'makedataurl',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'Open a [extension] file as data url',
+            arguments: {
+              extension: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: '.png'
+              }
+            }
           }
         ],
         menus: {
@@ -232,10 +254,17 @@
     }
 
     showPicker () {
+      dataurloutput = false;
       return showFilePrompt('');
     }
 
     showPickerExtensions (args) {
+      dataurloutput = false;
+      return showFilePrompt(args.extension);
+    }
+
+    makedataurl (args) {
+      dataurloutput = true;
       return showFilePrompt(args.extension);
     }
 
