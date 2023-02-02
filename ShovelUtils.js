@@ -2,6 +2,7 @@ console.log("ShovelUtils v1.1")
 tempImageLoad = null
 string = null;
 temp = null;
+tempVAR = null;
 
 (function(Scratch) {
   const vm = Scratch.vm;
@@ -17,12 +18,16 @@ temp = null;
   vm.extensionManager.loadExtensionURL("http://localhost:8000/Cookie.js")
   vm.extensionManager.loadExtensionURL("http://localhost:8000/cursor.js")
 
+
   'use strict';
   class ShovelUtils {
     getInfo () {
       return { 
         id: 'ShovelUtils',
         name: 'ShovelUtils',
+        color1: '#f54242',
+        color2: '#f54242',
+        color3: '#f54242',
         blocks: [{
           opcode: 'importImage',
           blockType: Scratch.BlockType.COMMAND,
@@ -135,6 +140,22 @@ temp = null;
             }
          }
          },
+         {
+          opcode: 'frameCosm',
+          blockType: Scratch.BlockType.REPORTER,
+          text: "[NAME][THING]",
+          arguments: {
+            NAME: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'NAME',
+            },
+            THING: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: '',
+            }
+         }
+         },
+         
 
       ]
       }
@@ -158,6 +179,10 @@ temp = null;
     })
   });
   }
+
+  frameCosm({THING,NAME}){
+return THING
+    }
 
 importSprite ({TEXT}) {
   fetch(TEXT)
