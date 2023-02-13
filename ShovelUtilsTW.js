@@ -1,26 +1,11 @@
-console.log("ShovelUtils v1.1")
-tempImageLoad = null
-string = null;
-temp = null;
-tempVAR = null;
-
-
-
 (function(Scratch) {
+'use strict';
+console.log("ShovelUtils v1.1")
+var tempImageLoad = {};
+var string = '';
+var temp = {};
+var tempVAR = {};
   const vm = Scratch.vm;
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/utilities.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/beta.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/files.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/runtime-options.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/CloudLinkWS.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/pointerlock.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/stretch.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/encoding.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/navigator.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/Cookie.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/cursor.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/penplus.js")
-  'use strict';
   class ShovelUtils {
     getInfo () {
       return { 
@@ -51,7 +36,7 @@ tempVAR = null;
           arguments: {
             TEXT: {
               type: Scratch.ArgumentType.STRING,
-              defaultValue: '0',
+              defaultValue: 'MyList',
             }
          }
          },
@@ -62,11 +47,11 @@ tempVAR = null;
           arguments: {
             TEXT: {
               type: Scratch.ArgumentType.STRING,
-              defaultValue: '0',
+              defaultValue: '[1,2]',
             },
             NAME: {
               type: Scratch.ArgumentType.STRING,
-              defaultValue: '0',
+              defaultValue: 'MyList',
             }
          }
          },
@@ -77,7 +62,7 @@ tempVAR = null;
           arguments: {
             TEXT: {
               type: Scratch.ArgumentType.STRING,
-              defaultValue: '0',
+              defaultValue: 'Link or data uri here',
             }
          }
          },
@@ -103,7 +88,7 @@ tempVAR = null;
           arguments: {
             TEXT: {
               type: Scratch.ArgumentType.STRING,
-              defaultValue: 'https://theshovel.github.io/Bullet-Hell/Bullet Hell.sb3',
+              defaultValue: 'https://theshovel.github.io/the-lazy-cook/Source.wsp',
             }
          }
          },
@@ -114,7 +99,7 @@ tempVAR = null;
           arguments: {
             TEXT: {
               type: Scratch.ArgumentType.STRING,
-              defaultValue: 'https://theshovel.github.io/utilities.js',
+              defaultValue: 'https://extensions.turbowarp.org/utilities.js',
             }
          }
          },
@@ -154,22 +139,6 @@ tempVAR = null;
          }
          },
          
-
-         {
-          opcode: 'frameCosm',
-          blockType: Scratch.BlockType.REPORTER,
-          text: "[NAME][THING]",
-          arguments: {
-            NAME: {
-              type: Scratch.ArgumentType.STRING,
-              defaultValue: 'NAME',
-            },
-            THING: {
-              type: Scratch.ArgumentType.STRING,
-              defaultValue: '',
-            }
-         }
-         },
          
 
       ]
@@ -194,11 +163,6 @@ tempVAR = null;
     })
   });
   }
-
-  frameCosm({THING,NAME}){
-return THING
-    }
-
 importSprite ({TEXT}) {
   fetch(TEXT)
   .then(r => r.arrayBuffer())
@@ -248,12 +212,13 @@ restartProject(){
 vm.greenFlag()
 }
 
-loadExtension({TEXT}){
-  vm.extensionManager.loadExtensionURL(TEXT)
+    async loadExtension({TEXT}){
+  if (await vm.securityManager.canLoadExtensionFromProject(TEXT)) {
+  vm.extensionManager.loadExtensionURL(TEXT)}
 }
 
 getlist({TEXT}){
-  return vm.runtime.getTargetForStage().lookupVariableByNameAndType(TEXT, 'list').value.toString()
+  return "["+vm.runtime.getTargetForStage().lookupVariableByNameAndType(TEXT, 'list').value.toString()+"]"
 }
 setlist({TEXT,NAME}){
   temp = JSON.parse(TEXT)
@@ -270,15 +235,16 @@ setedtarget({NAME}){
  * @returns (Number) The brightness value (dark) 0 ... 255 (light)
  */
 brightnessByColor ({color}) {
-  var color = "" + color, isHEX = color.indexOf("#") == 0, isRGB = color.indexOf("rgb") == 0;
+  color = "" + color;
+  var isHEX = color.indexOf("#") == 0, isRGB = color.indexOf("rgb") == 0;
   if (isHEX) {
     const hasFullSpec = color.length == 7;
     var m = color.substr(1).match(hasFullSpec ? /(\S{2})/g : /(\S{1})/g);
     if (m) var r = parseInt(m[0] + (hasFullSpec ? '' : m[0]), 16), g = parseInt(m[1] + (hasFullSpec ? '' : m[1]), 16), b = parseInt(m[2] + (hasFullSpec ? '' : m[2]), 16);
   }
   if (isRGB) {
-    var m = color.match(/(\d+){3}/g);
-    if (m) var r = m[0], g = m[1], b = m[2];
+    m = color.match(/(\d+){3}/g);
+    if (m) r = m[0], g = m[1], b = m[2];
   }
   if (typeof r != "undefined") return ((r*299)+(g*587)+(b*114))/1000;
 }

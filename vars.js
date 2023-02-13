@@ -1,4 +1,5 @@
-(function (ext) {
+(function(Scratch)
+ {
     ext._getStatus    = function()              { return { status: 2, msg: 'Ready' };  };
     ext._shutdown     = function()              {                                      };
     
