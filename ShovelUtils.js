@@ -20,6 +20,7 @@ tempVAR = null;
   vm.extensionManager.loadExtensionURL("http://localhost:8000/Cookie.js")
   vm.extensionManager.loadExtensionURL("http://localhost:8000/cursor.js")
   vm.extensionManager.loadExtensionURL("http://localhost:8000/penplus.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/cameracontrols.js")
   'use strict';
   class ShovelUtils {
     getInfo () {
