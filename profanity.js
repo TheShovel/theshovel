@@ -1,11 +1,11 @@
 (function(Scratch) {
     'use strict'
     const vm = Scratch.vm;
-      class profanityTW {
+      class profanityAPI {
         getInfo () {
           return { 
-            id: 'profanityTW',
-            name: 'profanityTW',
+            id: 'profanityAPI',
+            name: 'profanityAPI',
             color1: '#cf6a3c',
             color2: '#cf6a3c',
             color3: '#cf6a3c',
@@ -34,5 +34,5 @@
     }
     
     
-      Scratch.extensions.register(new profanityTW());
+      Scratch.extensions.register(new profanityAPI());
     })(Scratch);

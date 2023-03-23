@@ -224,7 +224,10 @@
     }
 
     setedtarget({ NAME }) {
-      vm.setEditingTarget(vm.runtime.getSpriteTargetByName(NAME).id);
+      if (NAME.toLowerCase() === "stage"){ 
+        vm.setEditingTarget(vm.runtime.getTargetForStage().id);}
+      else
+      {vm.setEditingTarget(vm.runtime.getSpriteTargetByName(NAME).id);}
     }
 
     /**
