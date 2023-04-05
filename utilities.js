@@ -285,9 +285,10 @@
       return Date.now() % 1000;
     }
 
-    fetchFrom({URL}) {
-      return fetch(URL).then(res => res.text())
-        .catch(err => '');
+    fetchFrom(args) {
+      return Scratch.fetch(args.URL)
+      .then(r => r.text())
+      .catch(() => '');
     }
 
     parseJSON({PATH, JSON_STRING}) {
