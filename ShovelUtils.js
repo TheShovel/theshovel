@@ -3,8 +3,7 @@ tempImageLoad = null
 string = null;
 temp = null;
 tempVAR = null;
-
-
+memoryopen = 0;
 
 (function(Scratch) {
   const vm = Scratch.vm;
@@ -21,7 +20,20 @@ tempVAR = null;
   vm.extensionManager.loadExtensionURL("http://localhost:8000/cursor.js")
   vm.extensionManager.loadExtensionURL("http://localhost:8000/penplus.js")
   vm.extensionManager.loadExtensionURL("http://localhost:8000/cameracontrols.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/vars.js")
   'use strict';
+  const times = [];
+  let fps = vm.runtime.frameLoop.framerate;
+  const oldStep = vm.runtime._step;
+  vm.runtime._step = function () {
+    oldStep.call(this);
+    const now = performance.now();
+    while (times.length > 0 && times[0] <= now - 1000) {
+      times.shift();
+    }
+    times.push(now);
+    fps = times.length;
+  };
   class ShovelUtils {
     getInfo () {
       return { 
@@ -81,6 +93,11 @@ tempVAR = null;
               defaultValue: '0',
             }
          }
+         },
+         {
+          opcode: 'showmemory',
+          blockType: Scratch.BlockType.COMMAND,
+          text: "Show memory stats"
          },
          {
           opcode: 'importSound',
@@ -171,6 +188,11 @@ tempVAR = null;
             }
          }
          },
+         {
+          opcode: 'getfps',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'Fps'
+        },
          
 
       ]
@@ -284,6 +306,15 @@ brightnessByColor ({color}) {
   if (typeof r != "undefined") return ((r*299)+(g*587)+(b*114))/1000;
 }
 
+showmemory(){
+  if(memoryopen == 0){
+(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})();
+memoryopen = 1;
+}
+}
+    getfps(){
+      return fps;
+    }
 }
 
 
