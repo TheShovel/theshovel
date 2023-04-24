@@ -21,7 +21,26 @@ memoryopen = 0;
   vm.extensionManager.loadExtensionURL("http://localhost:8000/penplus.js")
   vm.extensionManager.loadExtensionURL("http://localhost:8000/cameracontrols.js")
   vm.extensionManager.loadExtensionURL("http://localhost:8000/vars.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/profanity.js")
   'use strict';
+
+  //Code from https://www.growingwiththeweb.com/2017/12/fast-simple-js-fps-counter.html
+const timesF = [];
+let fpsF;
+
+function refreshLoop() {
+  window.requestAnimationFrame(() => {
+    const now = performance.now();
+    while (timesF.length > 0 && timesF[0] <= now - 1000) {
+      timesF.shift();
+    }
+    timesF.push(now);
+    fpsF = timesF.length;
+    refreshLoop();
+  });
+}
+refreshLoop()
+
   const times = [];
   let fps = vm.runtime.frameLoop.framerate;
   const oldStep = vm.runtime._step;
@@ -193,6 +212,46 @@ memoryopen = 0;
           blockType: Scratch.BlockType.REPORTER,
           text: 'Fps'
         },
+        {
+          opcode: 'getfpsF',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'FpsF'
+        },
+        {
+          opcode: 'alertBlock',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'alert [STRING]',
+          arguments: {
+            STRING: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'A red spy is in the base!'
+            }
+          }
+        },
+        {
+          opcode: 'inputPromptBlock',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'prompt [STRING]',
+          disableMonitor: true,
+          arguments: {
+            STRING: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'The code is 1, 1, 1.. err... 1!'
+            }
+          }
+        },
+        {
+          opcode: 'confirmationBlock',
+          blockType: Scratch.BlockType.BOOLEAN,
+          text: 'confirm [STRING]',
+          arguments: {
+            STRING: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Are you the red spy?'
+            }
+          }
+        },
+        
          
 
       ]
@@ -275,8 +334,13 @@ loadExtension({TEXT}){
   vm.extensionManager.loadExtensionURL(TEXT)
 }
 
-getlist({TEXT}){
-  return vm.runtime.getTargetForStage().lookupVariableByNameAndType(TEXT, 'list').value.toString()
+getlist({ TEXT }) {
+  const list = vm.runtime.getTargetForStage().lookupVariableByNameAndType(TEXT, 'list');
+  if (list) {
+    return JSON.stringify(list.value);
+  } else {
+    return "";
+  }
 }
 setlist({TEXT,NAME}){
   temp = JSON.parse(TEXT)
@@ -314,7 +378,28 @@ memoryopen = 1;
 }
     getfps(){
       return fps;
-    }
+}
+
+getfpsF(){
+  return fpsF;
+}
+
+alertBlock(args) {
+  alert(args.STRING);
+}
+
+inputPromptBlock(args) {
+  return prompt(args.STRING);
+}
+
+confirmationBlock(args) {
+  if (confirm(args.STRING)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 }
 
 

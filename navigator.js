@@ -21,7 +21,17 @@
             opcode: 'getMemory',
             blockType: Scratch.BlockType.REPORTER,
             text: 'device memory'
-          }
+          },
+          {
+            opcode: 'getMonitorSizeW',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'monitor width'
+          },
+          {
+            opcode: 'getMonitorSizeH',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'monitor height'
+          },
         ]
       };
     }
@@ -61,6 +71,12 @@
     } else {
         return navigator.deviceMemory;
     }
+    }
+    getMonitorSizeW(){
+      return window.screen.width;
+    }
+    getMonitorSizeH(){
+      return window.screen.height;
     }
   }
 
