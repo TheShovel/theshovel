@@ -7,21 +7,24 @@ memoryopen = 0;
 
 (function(Scratch) {
   const vm = Scratch.vm;
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/utilities.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/beta.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/files.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/runtime-options.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/CloudLinkWS.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/pointerlock.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/stretch.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/encoding.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/navigator.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/Cookie.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/cursor.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/penplus.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/cameracontrols.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/vars.js")
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/profanity.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/utilities.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/beta.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/files.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/runtime-options.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/CloudLinkWS.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/pointerlock.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/stretch.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/encoding.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/navigator.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/Cookie.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/cursor.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/penplus.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/cameracontrols.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/vars.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/profanity.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/discord.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/CanvasEffects.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/global-coordinate.js");
   'use strict';
 
   //Code from https://www.growingwiththeweb.com/2017/12/fast-simple-js-fps-counter.html
