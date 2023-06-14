@@ -32,6 +32,16 @@
             blockType: Scratch.BlockType.REPORTER,
             text: 'monitor height'
           },
+          {
+            opcode: 'getCanvasSizeW',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'canvas width'
+          },
+          {
+            opcode: 'getCanvasSizeH',
+            blockType: Scratch.BlockType.REPORTER,
+            text: 'canvas height'
+          },
         ]
       };
     }
@@ -77,6 +87,12 @@
     }
     getMonitorSizeH(){
       return window.screen.height;
+    }
+    getCanvasSizeW(){
+      return vm.renderer.canvas.width
+    }
+    getCanvasSizeH(){
+      return vm.renderer.canvas.height
     }
   }
 

@@ -8,11 +8,11 @@ try {
 	}).then(data => {
 		servers = JSON.parse(data);
 	}).catch(err => {
-		console.log(err);
+		//(err);
 		servers = {};
 	});
 } catch(err) {
-	console.log(err);
+	//(err);
 	servers = {};
 };
 
@@ -1094,7 +1094,7 @@ class CloudLink {
 	openSocket({IP}) {
 		const self = this;
 		if (!self.isRunning) {
-			console.log("Starting socket.");
+			//("Starting socket.");
 			self.link_status = 1;
 			
 			self.disconnectWasClean = false;
@@ -1115,12 +1115,12 @@ class CloudLink {
 				// Send the handshake request to get server to detect client protocol
 				mWS.send(JSON.stringify({"cmd": "handshake", "listener": "setprotocol"}))
 
-				console.log("Successfully opened socket.");
+				//("Successfully opened socket.");
 			};
 			
 			mWS.onmessage = function(event){
 				let tmp_socketData = JSON.parse(event.data);
-				console.log("RX:", tmp_socketData);
+				//("RX:", tmp_socketData);
 
 				if (self.queueableCmds.includes(tmp_socketData.cmd)) {
 					self.socketData[tmp_socketData.cmd].push(tmp_socketData);
@@ -1134,17 +1134,17 @@ class CloudLink {
 								if (!self.socketData.ulist.some(o => ((o.username === tmp_socketData.val.username) && (o.id == tmp_socketData.val.id)))) {
 									self.socketData["ulist"].push(tmp_socketData.val);
 								} else {
-									console.log("Could not perform ulist method add, client", tmp_socketData.val, "already exists");
+									//("Could not perform ulist method add, client", tmp_socketData.val, "already exists");
 								};
 							} else if (tmp_socketData.mode == "remove") {
 								if (self.socketData.ulist.some(o => ((o.username === tmp_socketData.val.username) && (o.id == tmp_socketData.val.id)))) {
 									// This is by far the fugliest thing I have ever written in JS, or in any programming language... thanks I hate it
 									self.socketData["ulist"] = self.socketData["ulist"].filter(user => ((!(user.username === tmp_socketData.val.username)) && (!(user.id == tmp_socketData.val.id))));
 								} else {
-									console.log("Could not perform ulist method remove, client", tmp_socketData.val, "was not found");
+									//("Could not perform ulist method remove, client", tmp_socketData.val, "was not found");
 								};
 							} else {
-								console.log("Could not understand ulist method:", tmp_socketData.mode);
+								//("Could not understand ulist method:", tmp_socketData.mode);
 							};
 						} else {
 							// Retain compatibility wtih existing servers
@@ -1172,25 +1172,25 @@ class CloudLink {
 							self.username = tmp_socketData.val;
 							self.isUsernameSyncing = false;
 							self.isUsernameSet = true;
-							console.log("Username was accepted by the server, and has been set to:", self.username);
+							//("Username was accepted by the server, and has been set to:", self.username);
 						} else {
-							console.warn("Username was rejected by the server. Error code:", String(tmp_socketData.code));
+							//("Username was rejected by the server. Error code:", String(tmp_socketData.code));
 							self.isUsernameSyncing = false;
 						};
 					} else if (tmp_socketData.listener == "roomLink") {
 						self.isRoomSetting = false;
 						self.socketListeners["roomLink"] = true;
 						if (tmp_socketData.code == "I:100 | OK") {
-							console.log("Linking to room(s) was accepted by the server!");
+							//("Linking to room(s) was accepted by the server!");
 							self.isLinked = true;
 						} else {
-							console.warn("Linking to room(s) was rejected by the server. Error code:", String(tmp_socketData.code));
+							//("Linking to room(s) was rejected by the server. Error code:", String(tmp_socketData.code));
 							self.enableRoom = false;
 							self.isLinked = false;
 							self.selectRoom = "";
 						};
 					} else if ((tmp_socketData.listener == "setprotocol") && (!this.protocolOk)) {
-						console.log("Server successfully set client protocol to cloudlink!");
+						//("Server successfully set client protocol to cloudlink!");
 						self.socketData.statuscode = [];
 						self.protocolOk = true;
 						self.socketListeners["setprotocol"] = true;
@@ -1247,7 +1247,7 @@ class CloudLink {
 				if (self.link_status != 1) {
 					if (self.disconnectWasClean) {
 						self.link_status = 3;
-						console.log("Socket closed.");
+						//("Socket closed.");
 						self.wasConnectionDropped = false;
 						self.didConnectionFail = false;
 					} else {
@@ -1264,13 +1264,13 @@ class CloudLink {
 				};
 			};
 		} else {
-			console.warn("Socket is already open.");
+			//("Socket is already open.");
 		};
 	}
 	
 	openSocketPublicServers({ ID }){
 		if (servers.hasOwnProperty(ID)) {
-			console.log("Connecting to:", servers[ID].url)
+			//("Connecting to:", servers[ID].url)
 			this.openSocket({"IP": servers[ID].url});
 		};
 	};
@@ -1278,11 +1278,11 @@ class CloudLink {
 	closeSocket(){
 		const self = this;
 		if (this.isRunning) {
-			console.log("Closing socket...");
+			//("Closing socket...");
 			mWS.close(1000,'script closure');
 			self.disconnectWasClean = true;
 		} else {
-			console.warn("Socket is not open.");
+			//("Socket is not open.");
 		};
 	}
 	
@@ -1300,26 +1300,26 @@ class CloudLink {
 									listener: "setusername"
 								};
 
-								console.log("TX:", tmp_msg);
+								//("TX:", tmp_msg);
 								mWS.send(JSON.stringify(tmp_msg));
 								
 								self.tmp_username = String(NAME);
 								self.isUsernameSyncing = true;
 									
 							} else {
-								console.log("Blocking attempt to use reserved usernames");
+								//("Blocking attempt to use reserved usernames");
 							};
 						} else {
-							console.log("Blocking attempt to use username larger than 20 characters, username is " + String(NAME).length + " characters long");
+							//("Blocking attempt to use username larger than 20 characters, username is " + String(NAME).length + " characters long");
 						};
 					} else {
-						console.log("Blocking attempt to use blank username");
+						//("Blocking attempt to use blank username");
 					};
 				} else {
-					console.warn("Username already has been set!");
+					//("Username already has been set!");
 				};
 			} else {
-				console.warn("Username is still syncing!");
+				//("Username is still syncing!");
 			};
 		};
 	};
@@ -1331,10 +1331,10 @@ class CloudLink {
 				self.enableListener = true;
 				self.setListener = String(ID);
 			} else {
-				console.warn("Listeners were already created!");
+				//("Listeners were already created!");
 			};
 		} else {
-			console.log("Cannot assign a listener to a packet while disconnected");
+			//("Cannot assign a listener to a packet while disconnected");
 		};
 	};
 
@@ -1350,19 +1350,19 @@ class CloudLink {
 						listener: "roomLink"
 					};
 
-					console.log("TX:", tmp_msg);
+					//("TX:", tmp_msg);
 					mWS.send(JSON.stringify(tmp_msg));
 
 					self.isRoomSetting = true;
 
 				} else {
-					console.warn("Blocking attempt to send a room ID / room list larger than 1000 bytes (1 KB), room ID / room list is " + String(ROOMS).length + " bytes");
+					//("Blocking attempt to send a room ID / room list larger than 1000 bytes (1 KB), room ID / room list is " + String(ROOMS).length + " bytes");
 				};
 			} else {
-				console.warn("Still linking to rooms!");
+				//("Still linking to rooms!");
 			};
 		} else {
-			console.warn("Socket is not open.");
+			//("Socket is not open.");
 		};
 	};
 
@@ -1375,16 +1375,16 @@ class CloudLink {
 						self.enableRoom = true;
 						self.selectRoom = ROOMS;
 					} else {
-						console.warn("Blocking attempt to select a room ID / room list larger than 1000 bytes (1 KB), room ID / room list is " + String(ROOMS).length + " bytes");
+						//("Blocking attempt to select a room ID / room list larger than 1000 bytes (1 KB), room ID / room list is " + String(ROOMS).length + " bytes");
 					};
 				} else {
-					console.warn("Rooms were already selected!");
+					//("Rooms were already selected!");
 				};
 			} else {
-				console.warn("Not linked to any room(s)!");
+				//("Not linked to any room(s)!");
 			};
 		} else {
-			console.warn("Socket is not open.");
+			//("Socket is not open.");
 		};
 	};
 
@@ -1401,7 +1401,7 @@ class CloudLink {
 					tmp_msg["listener"] = autoConvert(this.setListener);
 				};
 
-				console.log("TX:", tmp_msg);
+				//("TX:", tmp_msg);
 				mWS.send(JSON.stringify(tmp_msg));
 
 				if (this.enableListener) {
@@ -1413,10 +1413,10 @@ class CloudLink {
 
 				self.isLinked = false;
 			} else {
-				console.warn("Not linked to any rooms!");
+				//("Not linked to any rooms!");
 			};
 		} else {
-			console.warn("Socket is not open.");
+			//("Socket is not open.");
 		};
 	};
 
@@ -1437,7 +1437,7 @@ class CloudLink {
 					tmp_msg["rooms"] = autoConvert(this.selectRoom);
 				};
 
-				console.log("TX:", tmp_msg);
+				//("TX:", tmp_msg);
 				mWS.send(JSON.stringify(tmp_msg));
 
 				if (this.enableListener) {
@@ -1452,10 +1452,10 @@ class CloudLink {
 				};
 				
 			} else {
-				console.warn("Blocking attempt to send packet larger than 1000 bytes (1 KB), packet is " + String(DATA).length + " bytes");
+				//("Blocking attempt to send packet larger than 1000 bytes (1 KB), packet is " + String(DATA).length + " bytes");
 			};
 		} else {
-			console.warn("Socket is not open.");
+			//("Socket is not open.");
 		};
 	};
 	
@@ -1476,7 +1476,7 @@ class CloudLink {
 					tmp_msg["rooms"] = autoConvert(this.selectRoom);
 				};
 
-				console.log("TX:", tmp_msg);
+				//("TX:", tmp_msg);
 				mWS.send(JSON.stringify(tmp_msg));
 
 				if (this.enableListener) {
@@ -1491,10 +1491,10 @@ class CloudLink {
 				};
 
 			} else {
-				console.warn("Blocking attempt to send packet larger than 1000 bytes (1 KB), packet is " + String(DATA).length + " bytes");
+				//("Blocking attempt to send packet larger than 1000 bytes (1 KB), packet is " + String(DATA).length + " bytes");
 			};
 		} else {
-			console.warn("Socket is not open.");
+			//("Socket is not open.");
 		};
 	};
 	
@@ -1515,7 +1515,7 @@ class CloudLink {
 					tmp_msg["rooms"] = autoConvert(this.selectRoom);
 				};
 
-				console.log("TX:", tmp_msg);
+				//("TX:", tmp_msg);
 				mWS.send(JSON.stringify(tmp_msg));
 
 				if (this.enableListener) {
@@ -1530,10 +1530,10 @@ class CloudLink {
 				};
 
 			} else {
-				console.warn("Blocking attempt to send packet larger than 1000 bytes (1 KB), packet is " + String(DATA).length + " bytes");
+				//("Blocking attempt to send packet larger than 1000 bytes (1 KB), packet is " + String(DATA).length + " bytes");
 			};
 		} else {
-			console.warn("Socket is not open.");
+			//("Socket is not open.");
 		};
 	};
 	
@@ -1555,7 +1555,7 @@ class CloudLink {
 					tmp_msg["rooms"] = autoConvert(this.selectRoom);
 				};
 
-				console.log("TX:", tmp_msg);
+				//("TX:", tmp_msg);
 				mWS.send(JSON.stringify(tmp_msg));
 
 				if (this.enableListener) {
@@ -1570,10 +1570,10 @@ class CloudLink {
 				};
 
 			} else {
-				console.warn("Blocking attempt to send packet larger than 1000 bytes (1 KB), packet is " + String(DATA).length + " bytes");
+				//("Blocking attempt to send packet larger than 1000 bytes (1 KB), packet is " + String(DATA).length + " bytes");
 			};
 		} else {
-			console.warn("Socket is not open.");
+			//("Socket is not open.");
 		};
 	};
 	
@@ -1593,7 +1593,7 @@ class CloudLink {
 					tmp_msg["rooms"] = String(this.selectRoom);
 				};
 
-				console.log("TX:", tmp_msg);
+				//("TX:", tmp_msg);
 				mWS.send(JSON.stringify(tmp_msg));
 				
 				if (this.enableListener) {
@@ -1608,10 +1608,10 @@ class CloudLink {
 				};
 
 			} else {
-				console.warn("Blocking attempt to send packet with questionably long arguments");
+				//("Blocking attempt to send packet with questionably long arguments");
 			};
 		} else {
-			console.warn("Socket is not open.");
+			//("Socket is not open.");
 		};
 	};
 	
@@ -1632,7 +1632,7 @@ class CloudLink {
 					tmp_msg["rooms"] = String(this.selectRoom);
 				};
 
-				console.log("TX:", tmp_msg);
+				//("TX:", tmp_msg);
 				mWS.send(JSON.stringify(tmp_msg));
 				
 				if (this.enableListener) {
@@ -1647,10 +1647,10 @@ class CloudLink {
 				};
 
 			} else {
-				console.warn("Blocking attempt to send packet with questionably long arguments");
+				//("Blocking attempt to send packet with questionably long arguments");
 			};
 		} else {
-			console.warn("Socket is not open.");
+			//("Socket is not open.");
 		};
 	};
 	
@@ -1697,4 +1697,4 @@ class CloudLink {
 };
 	var extensionClass = CloudLink;
 		Scratch.extensions.register(new extensionClass());
-		console.log("CloudLink 4.0 loaded. Detecting sandboxed mode, performance will suffer. Please load CloudLink in Unsandboxed mode.");
+		//("CloudLink 4.0 loaded. Detecting sandboxed mode, performance will suffer. Please load CloudLink in Unsandboxed mode.");

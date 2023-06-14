@@ -25,11 +25,46 @@ memoryopen = 0;
   vm.extensionManager.loadExtensionURL("http://localhost:8000/discord.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/CanvasEffects.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/global-coordinate.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/numericalencoding.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/CommentBlocks.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/graphics2d.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/Time.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/MoreTimers.js");
+
   'use strict';
 
   //Code from https://www.growingwiththeweb.com/2017/12/fast-simple-js-fps-counter.html
 const timesF = [];
 let fpsF;
+
+function editDistance(s1, s2) {
+  s1 = s1.toLowerCase();
+  s2 = s2.toLowerCase();
+
+  var costs = new Array();
+  for (var i = 0; i <= s1.length; i++) {
+    var lastValue = i;
+    for (var j = 0; j <= s2.length; j++) {
+      if (i == 0)
+        costs[j] = j;
+      else {
+        if (j > 0) {
+          var newValue = costs[j - 1];
+          if (s1.charAt(i - 1) != s2.charAt(j - 1))
+            newValue = Math.min(Math.min(newValue, lastValue),
+              costs[j]) + 1;
+          costs[j - 1] = lastValue;
+          lastValue = newValue;
+        }
+      }
+    }
+    if (i > 0)
+      costs[s2.length] = lastValue;
+  }
+  return costs[s2.length];
+}
+
+
 
 function refreshLoop() {
   window.requestAnimationFrame(() => {
@@ -89,6 +124,11 @@ refreshLoop()
               defaultValue: '0',
             }
          }
+         },
+         {
+          opcode: 'getUTime',
+          blockType: Scratch.BlockType.REPORTER,
+          text: "UTime",
          },
          {
           opcode: 'setlist',
@@ -254,8 +294,47 @@ refreshLoop()
             }
           }
         },
-        
-         
+        {
+          opcode: 'downloadURI',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'Download [URI] name [NAME]',
+          arguments: {
+            STRING: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Test'
+            },
+            NAME: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Test'
+            }
+          }
+        },
+        {
+          opcode: 'getblocksjson',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'Get project Json',
+        },
+        {
+          opcode: 'similarity',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'Compare [s1] and [s2]',
+          arguments: {
+            s1: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Test'
+            },
+            s2: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Test2'
+            }
+          }
+        },
+        {
+          opcode: 'snapshotStage',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'snapshot stage',
+          disableMonitor: true
+        },
 
       ]
       }
@@ -402,6 +481,43 @@ confirmationBlock(args) {
     return false;
   }
 }
+getUTime(){
+  return Date. now()
+}
+
+downloadURI({URI, NAME}) {
+  const link = document.createElement("a");
+  link.href = URI;
+  link.download = NAME;
+  link.click();
+}
+getblocksjson({}){
+  var func = eval('vm._saveProjectZip().files["project.json"]._data');
+  return func;
+}
+similarity({s1, s2}) {
+  var longer = s1;
+  var shorter = s2;
+  if (s1.length < s2.length) {
+    longer = s2;
+    shorter = s1;
+  }
+  var longerLength = longer.length;
+  if (longerLength == 0) {
+    return 1.0;
+  }
+  return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+}
+
+snapshotStage(args, util) {
+  return new Promise(resolve => {
+    // TODO need to make sure VM handles skin privacy with screenshots
+    Scratch.vm.runtime.renderer.requestSnapshot(uri => {
+      resolve(uri);
+    });
+  });
+}
+
 
 }
 
