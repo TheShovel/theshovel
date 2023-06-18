@@ -1,11 +1,10 @@
-console.log("ShovelUtils v1.1")
+(function(Scratch) {
+  console.log("ShovelUtils v1.1")
 tempImageLoad = null
 string = null;
 temp = null;
 tempVAR = null;
 memoryopen = 0;
-
-(function(Scratch) {
   const vm = Scratch.vm;
   vm.extensionManager.loadExtensionURL("http://localhost:8000/utilities.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/beta.js");
@@ -27,7 +26,6 @@ memoryopen = 0;
   vm.extensionManager.loadExtensionURL("http://localhost:8000/global-coordinate.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/numericalencoding.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/CommentBlocks.js");
-  vm.extensionManager.loadExtensionURL("http://localhost:8000/graphics2d.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/Time.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/MoreTimers.js");
 
