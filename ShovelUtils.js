@@ -2,6 +2,7 @@
   console.log("ShovelUtils v1.1")
 tempImageLoad = null
 string = null;
+output = null;
 temp = null;
 tempVAR = null;
 memoryopen = 0;
@@ -28,7 +29,8 @@ memoryopen = 0;
   vm.extensionManager.loadExtensionURL("http://localhost:8000/CommentBlocks.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/Time.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/MoreTimers.js");
-
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/Cast.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/penPlus.js");
   'use strict';
 
   //Code from https://www.growingwiththeweb.com/2017/12/fast-simple-js-fps-counter.html
@@ -333,6 +335,27 @@ refreshLoop()
           text: 'snapshot stage',
           disableMonitor: true
         },
+        {
+          opcode: 'uploadtext',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'Upload [TEXT] with ID [ID]',
+          arguments:{
+            TEXT: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Test'
+            },
+            ID: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Test'
+            }
+          }
+        },
+        {
+          opcode: 'getuploadinfo',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'Wastebin info',
+          disableMonitor: true
+        },
 
       ]
       }
@@ -515,7 +538,30 @@ snapshotStage(args, util) {
     });
   });
 }
+uploadtext(args){
+  fetch("https://corsproxy.io/?https://wastebin-1-f9697939.deta.app/api/new", {
+  method: "POST",
+  body: JSON.stringify({
+  "content": args.TEXT,
+  "filename": "hahaha",
+  "highlighting_language": "",
+  "ephemeral": false,
+  "expire_at": 0,
+  "expire_in": 0,
+  "date_created": 0,
+  "id": args.ID
+}),
+  headers: {
+    "Content-type": "application/json; charset=UTF-8"
+  }
+})
+  .then((response) => response.json())
+  .then((json) => output = JSON.stringify(json));
+}
 
+getuploadinfo(){
+  return output;
+}
 
 }
 

@@ -70,7 +70,6 @@ Other various small fixes
   const gl = runtime.renderer._gl;
 
   const EXAMPLE_IMAGE = 'https://extensions.turbowarp.org/dango.png';
-
   const blankImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAABRJREFUGFdj/P///38GBgYGRhgDAFfVB/vDfnUlAAAAAElFTkSuQmCC";
 
   // TODO: see how these differ from Scratch, if at all
