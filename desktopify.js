@@ -1,3 +1,4 @@
+vm = Scratch.vm
 vm.extensionManager.securityManager.getSandboxMode = function() {
     return 'unsandboxed';
 }
