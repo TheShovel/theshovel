@@ -1,7 +1,3 @@
-vm = Scratch.vm
-vm.extensionManager.securityManager.getSandboxMode = function() {
-    return 'unsandboxed';
-}
 //Branding stuff
 const versionName = document.createElement('div');
 versionName.innerHTML = '<span class="TWSDversion" style="order: 1; padding: 9px;">Shovel Desktop 1.0</span>'
