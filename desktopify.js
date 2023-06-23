@@ -1,8 +1,11 @@
+vm.extensionManager.securityManager.getSandboxMode = function() {
+    return 'unsandboxed';
+}
 //Branding stuff
 const versionName = document.createElement('div');
 versionName.innerHTML = '<span class="TWSDversion" style="order: 1; padding: 9px;">Shovel Desktop 1.0</span>'
 
-shovelIcon = "https://pngimg.com/d/shovel_PNG108903.png"
+shovelIcon = "https://theshovel.github.io/Shovelicon.png"
 
 //Replace extension gallery button because it's broken
 const newExtGalButton = document.createElement('div');
