@@ -4,7 +4,7 @@ versionName.innerHTML = '<span class="TWSDversion" style="order: 1; padding: 9px
 
 shovelIcon = "https://theshovel.github.io/Shovelicon.png"
 
-//Replace extension gallery button because it's broken
+//Replace extension gallery button because I can't fix it in electron
 const newExtGalButton = document.createElement('div');
 
 //Replace addons button
@@ -65,15 +65,13 @@ function replacePackaerButton(){
     }catch(err){
 
     }
-    try{
+    if (document.querySelector('div[class^="scratchCategoryMenuItem scratchCategoryId-desktopify"]') != null){
         document.querySelector('div[class^="scratchCategoryMenuItem scratchCategoryId-desktopify"]').remove();
-    }catch(err){
     }
-    try{
+    if (document.querySelector(".action-menu_main-icon_1ktMc").src != shovelIcon){
         document.querySelector(".action-menu_main-icon_1ktMc").src = shovelIcon;
-    }catch(err){
-
     }
+
     document.title = "TurboWarp - Shovel Desktop";
     setTimeout(function() {
         replacePackaerButton()
@@ -85,8 +83,6 @@ function dostuff()
     try{
     document.querySelector("#app > div > div > div > div.gui_menu-bar-position_3U1T0.menu-bar_menu-bar_JcuHF.box_box_2jjDp > div.menu-bar_main-menu_3wjWH > div:nth-child(5)").remove();
     document.querySelector("#app > div > div > div > div.gui_menu-bar-position_3U1T0.menu-bar_menu-bar_JcuHF.box_box_2jjDp > div.menu-bar_main-menu_3wjWH > div.menu-bar_file-group_1_CHX > div:nth-child(5)").replaceWith(newAddonsButton);
-
-    console.log("done")
 }catch(err){
         setTimeout(function() {
             dostuff()
@@ -95,20 +91,15 @@ function dostuff()
 }
 
 dostuff()
-class desktopify {
+class Shoveldesktopify {
     getInfo() {
       return {
         id: 'desktopify',
         name: ' ',
-        hideFromPalette: true,
         blocks: [
         ]
       };
     }
-  
-    hello() {
-      return 'World!';
-    }
   }
   
-  Scratch.extensions.register(new desktopify());
+  Scratch.extensions.register(new Shoveldesktopify());

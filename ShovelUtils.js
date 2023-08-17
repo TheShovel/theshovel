@@ -4,8 +4,13 @@ tempImageLoad = null
 string = null;
 output = null;
 temp = null;
+NSFWINFO = null;
+SentDataUrl = null;
 tempVAR = null;
 memoryopen = 0;
+R = null;
+G = null;
+B = null;
   const vm = Scratch.vm;
   vm.extensionManager.loadExtensionURL("http://localhost:8000/utilities.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/beta.js");
@@ -31,11 +36,28 @@ memoryopen = 0;
   vm.extensionManager.loadExtensionURL("http://localhost:8000/MoreTimers.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/Cast.js");
   vm.extensionManager.loadExtensionURL("http://localhost:8000/penPlus.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/clippingblending.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/LooksPlus.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/ColorPicker.js");
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/vars2.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/upload.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/LZ-String.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/zip.js")
+  vm.extensionManager.loadExtensionURL("http://localhost:8000/localstorage.js")
   'use strict';
 
   //Code from https://www.growingwiththeweb.com/2017/12/fast-simple-js-fps-counter.html
 const timesF = [];
 let fpsF;
+
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
 
 function editDistance(s1, s2) {
   s1 = s1.toLowerCase();
@@ -351,12 +373,77 @@ refreshLoop()
           }
         },
         {
+          opcode: 'seturlprovider',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'URL provider [URL]',
+          arguments:{
+            URL: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Test'
+            }
+          }
+        },
+        {
           opcode: 'getuploadinfo',
           blockType: Scratch.BlockType.REPORTER,
           text: 'Wastebin info',
           disableMonitor: true
         },
-
+        {
+          opcode: 'getR',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'Get R',
+          disableMonitor: true
+        },
+        {
+          opcode: 'getG',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'Get G',
+          disableMonitor: true
+        },
+        {
+          opcode: 'getB',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'Get B',
+          disableMonitor: true
+        },
+        {
+          opcode: 'convrgb',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'Convert [HEX] to RGB',
+          arguments:{
+            HEX: {
+              type: Scratch.ArgumentType.COLOR,
+            }
+          }
+        },
+        {
+          opcode: 'setClipboard',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'set [STRING] to clipboard',
+          arguments: {
+            STRING: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'apple',
+            }
+          }
+        },
+        {
+          opcode: 'getIfNSFW',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'Get NSFW info for [URL]',
+          arguments: {
+            URL: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: '',
+            }
+          }
+        },
+        {
+          opcode: 'genNSFWINFO',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'Get NSFW API response'
+        }
       ]
       }
     }
@@ -532,18 +619,17 @@ similarity({s1, s2}) {
 
 snapshotStage(args, util) {
   return new Promise(resolve => {
-    // TODO need to make sure VM handles skin privacy with screenshots
     Scratch.vm.runtime.renderer.requestSnapshot(uri => {
       resolve(uri);
     });
   });
 }
 uploadtext(args){
-  fetch("https://corsproxy.io/?https://wastebin-1-f9697939.deta.app/api/new", {
+  fetch("https://corsproxy.io/?"+SentDataUrl, {
   method: "POST",
   body: JSON.stringify({
   "content": args.TEXT,
-  "filename": "hahaha",
+  "filename": btoa(Math.random()),
   "highlighting_language": "",
   "ephemeral": false,
   "expire_at": 0,
@@ -561,6 +647,58 @@ uploadtext(args){
 
 getuploadinfo(){
   return output;
+}
+
+convrgb(args){
+  R = hexToRgb(args.HEX).r;
+  G = hexToRgb(args.HEX).g;
+  B = hexToRgb(args.HEX).b;
+}
+
+
+getR(){
+  return R;
+}
+getG(){
+  return G;
+}
+getB(){
+  return B;
+}
+setClipboard(args) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(args.STRING);
+  }
+}
+getIfNSFW(args) {
+  NSFWINFO = '';
+  const data = JSON.stringify({
+    url: args.URL
+  });
+  
+  const xhr = new XMLHttpRequest();
+  xhr.withCredentials = true;
+  
+  xhr.addEventListener('readystatechange', function () {
+    if (this.readyState === this.DONE) {
+      NSFWINFO = this.responseText;
+    }
+  });
+  
+  xhr.open('POST', 'https://nsfw-images-detection-and-classification.p.rapidapi.com/adult-content');
+  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.setRequestHeader('X-RapidAPI-Key', '33aec59b92msh261f2ec0de44e3bp1364c6jsn65f63f8914ae');
+  xhr.setRequestHeader('X-RapidAPI-Host', 'nsfw-images-detection-and-classification.p.rapidapi.com');
+  
+  xhr.send(data);
+}
+
+genNSFWINFO() {
+  return NSFWINFO;
+}
+
+seturlprovider(args) {
+  SentDataUrl = args.URL;
 }
 
 }
